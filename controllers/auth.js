@@ -5,7 +5,10 @@ const {BadRequestError, UnauthenticatedError} = require('../errors')
 const register = async(req, res)=>{
 	const user = await User.create({...req.body})
 	const token = user.createJWT()
-	res.status(StatusCodes.CREATED).json({ user: {name: user.name}, token })
+	res.status(StatusCodes.CREATED).json({ 
+		user: {name: user.name, email: user.email}, 
+		token 
+	})
 }
 
 const login = async(req, res)=>{
@@ -15,14 +18,18 @@ const login = async(req, res)=>{
 	}
 
 	const user = await User.findOne({email})
-	// compare password
+	const isPasswordCorrect = await user.comparePassword(password)
 	if (!user){
 		throw new UnauthenticatedError('provide valid credentials')
+	}
+	// compare password
+	if (!isPasswordCorrect){
+		throw new UnauthenticatedError('password does not match')
 	}
 	
 	const token = user.createJWT()
 	res.status(StatusCodes.OK).json({
-		user: { name: user.name },
+		user: { name: user.name, email: user.email },
 		token: token
 		})
 }
