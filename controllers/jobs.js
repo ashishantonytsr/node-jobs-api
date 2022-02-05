@@ -4,7 +4,7 @@ const {BadRequestError} = require('../errors')
 
 const getAllJobs = async(req, res)=>{
 	const jobs = await Job.find({createdBy: req.user.userId}).sort('createdAt')
-	res.status(StatusCodes.OK).json({jobs: jobs})
+	res.status(StatusCodes.OK).json({count: jobs.length, jobs: jobs})
 }
 
 const getSingleJob = async(req, res)=>{
