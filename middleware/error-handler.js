@@ -14,10 +14,11 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 		errorObj.statusCode = StatusCodes.BAD_REQUEST
 	}
 	if (err.name === 'CastError'){
-		errorObj.msg = `no job found with id ${err.value}`
+		errorObj.msg = `no job found with ${err.path} ${err.value}`
 		errorObj.statusCode = StatusCodes.BAD_REQUEST
 	}
 	if(err.code && err.code == 11000){
+		console.log(err);
 		errorObj.msg = `duplicate value entered for ${Object.keys(err.keyValue)} field`
 		errorObj.statusCode = StatusCodes.BAD_REQUEST
 	}
