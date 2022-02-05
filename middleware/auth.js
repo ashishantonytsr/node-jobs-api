@@ -12,7 +12,8 @@ const authenticationMiddleware = async(req, res, next)=>{
 	try {
 		const payload = jwt.verify(token, process.env.JWT_SECRET)
 		// attach user to job routes
-		req.user = {userId: payload.userId, name:payload.name}
+		const user = await User.findById(payload.userId).select('-password')
+		req.user = {userId: user._id, name: user.name}
 		next()
 	} catch (error) {
 		throw new UnauthenticatedError('Authentication failed')
