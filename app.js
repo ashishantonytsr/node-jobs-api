@@ -25,7 +25,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 app.use(express.json());
 
 // extra packages
-app.use('trust proxy', 1)
+// app.use('trust proxy', 1)
 app.use(
 	rateLimiter({
 		windowMs: 15 * 60 * 1000, //15 minutes
@@ -37,6 +37,7 @@ app.use(cors())
 app.use(xss())
 
 // routes
+app.get('/', (req, res)=>{ res.send('jobs-api') }) // dummy route
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/jobs', authenticateUser , jobsRouter)
 
